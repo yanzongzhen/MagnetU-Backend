@@ -16,6 +16,116 @@ definitions:
         description: Captcha ID
         type: string
     type: object
+  schema.File:
+    properties:
+      cloud_path:
+        description: CloudPath
+        type: string
+      download_count:
+        description: DownloadCount
+        type: integer
+      file_extension:
+        description: FileExtension
+        type: string
+      file_id:
+        description: Unique ID
+        type: string
+      file_name:
+        description: FileName
+        type: string
+      file_size:
+        description: FileSize
+        type: integer
+      file_type:
+        description: FileType
+        type: string
+      parent_folder_id:
+        description: From Folder.ID
+        type: string
+      repository_id:
+        description: From Repository.ID
+        type: string
+      storage_path:
+        description: StoragePath
+        type: string
+      upload_time:
+        type: string
+    type: object
+  schema.FileForm:
+    properties:
+      cloud_path:
+        description: CloudPath
+        type: string
+      download_count:
+        description: DownloadCount
+        type: integer
+      file_extension:
+        description: FileExtension
+        type: string
+      file_name:
+        description: FileName
+        type: string
+      file_size:
+        description: FileSize
+        type: integer
+      file_type:
+        description: FileType
+        type: string
+      parent_folder_id:
+        description: ParentFolderID
+        type: string
+      repository_id:
+        description: RepositoryID
+        type: string
+      storage_path:
+        description: StoragePath
+        type: string
+      upload_time:
+        description: Upload Time
+        type: string
+    required:
+    - file_extension
+    - file_name
+    - file_size
+    - file_type
+    - parent_folder_id
+    - repository_id
+    - storage_path
+    type: object
+  schema.Folder:
+    properties:
+      created_at:
+        description: Create time
+        type: string
+      folder_id:
+        description: Unique ID
+        type: string
+      folder_name:
+        description: FolderName
+        type: string
+      parent_folder_id:
+        description: From Folder.ID
+        type: string
+      repository_id:
+        description: From Repository.ID
+        type: string
+    type: object
+  schema.FolderForm:
+    properties:
+      folder_name:
+        description: FolderName
+        type: string
+      parent_folder_id:
+        description: ParentFolderID
+        type: string
+      repository_id:
+        description: RepositoryID
+        type: string
+    required:
+    - folder_name
+    - parent_folder_id
+    - repository_id
+    type: object
   schema.Logger:
     properties:
       created_at:
@@ -204,6 +314,47 @@ definitions:
       updated_at:
         description: Update time
         type: string
+    type: object
+  schema.Repository:
+    properties:
+      created_at:
+        description: Create time
+        type: string
+      current_capacity:
+        description: Current capacity
+        type: integer
+      id:
+        description: Unique ID
+        type: string
+      max_capacity:
+        description: Max capacity
+        type: integer
+      permissions:
+        description: Permissions
+        type: string
+      updated_at:
+        description: Update time
+        type: string
+      user_id:
+        description: From User.ID
+        type: string
+    type: object
+  schema.RepositoryForm:
+    properties:
+      current_capacity:
+        description: Current capacity
+        type: integer
+      max_capacity:
+        description: Max capacity
+        type: integer
+      permissions:
+        description: Permissions
+        type: string
+      user_id:
+        description: From User.ID
+        type: string
+    required:
+    - user_id
     type: object
   schema.Role:
     properties:
@@ -628,6 +779,338 @@ paths:
       summary: Update current user info
       tags:
       - LoginAPI
+  /api/v1/files:
+    get:
+      parameters:
+      - default: 1
+        description: pagination index
+        in: query
+        name: current
+        required: true
+        type: integer
+      - default: 10
+        description: pagination size
+        in: query
+        name: pageSize
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/util.ResponseResult'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/schema.File'
+                  type: array
+              type: object
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+      security:
+      - ApiKeyAuth: []
+      summary: Query File list
+      tags:
+      - FileAPI
+    post:
+      parameters:
+      - description: Request body
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/schema.FileForm'
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/util.ResponseResult'
+            - properties:
+                data:
+                  $ref: '#/definitions/schema.File'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+      security:
+      - ApiKeyAuth: []
+      summary: Create File record
+      tags:
+      - FileAPI
+  /api/v1/files/{id}:
+    delete:
+      parameters:
+      - description: unique id
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+      security:
+      - ApiKeyAuth: []
+      summary: Delete File record by ID
+      tags:
+      - FileAPI
+    get:
+      parameters:
+      - description: unique id
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/util.ResponseResult'
+            - properties:
+                data:
+                  $ref: '#/definitions/schema.File'
+              type: object
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+      security:
+      - ApiKeyAuth: []
+      summary: Get File record by ID
+      tags:
+      - FileAPI
+    put:
+      parameters:
+      - description: unique id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Request body
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/schema.FileForm'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+      security:
+      - ApiKeyAuth: []
+      summary: Update File record by ID
+      tags:
+      - FileAPI
+  /api/v1/folders:
+    get:
+      parameters:
+      - default: 1
+        description: pagination index
+        in: query
+        name: current
+        required: true
+        type: integer
+      - default: 10
+        description: pagination size
+        in: query
+        name: pageSize
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/util.ResponseResult'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/schema.Folder'
+                  type: array
+              type: object
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+      security:
+      - ApiKeyAuth: []
+      summary: Query Folder list
+      tags:
+      - FolderAPI
+    post:
+      parameters:
+      - description: Request body
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/schema.FolderForm'
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/util.ResponseResult'
+            - properties:
+                data:
+                  $ref: '#/definitions/schema.Folder'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+      security:
+      - ApiKeyAuth: []
+      summary: Create Folder record
+      tags:
+      - FolderAPI
+  /api/v1/folders/{id}:
+    delete:
+      parameters:
+      - description: unique id
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+      security:
+      - ApiKeyAuth: []
+      summary: Delete Folder record by ID
+      tags:
+      - FolderAPI
+    get:
+      parameters:
+      - description: unique id
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/util.ResponseResult'
+            - properties:
+                data:
+                  $ref: '#/definitions/schema.Folder'
+              type: object
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+      security:
+      - ApiKeyAuth: []
+      summary: Get Folder record by ID
+      tags:
+      - FolderAPI
+    put:
+      parameters:
+      - description: unique id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Request body
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/schema.FolderForm'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+      security:
+      - ApiKeyAuth: []
+      summary: Update Folder record by ID
+      tags:
+      - FolderAPI
   /api/v1/loggers:
     get:
       parameters:
@@ -892,6 +1375,176 @@ paths:
       summary: Update menu record by ID
       tags:
       - MenuAPI
+  /api/v1/repositories:
+    get:
+      parameters:
+      - default: 1
+        description: pagination index
+        in: query
+        name: current
+        required: true
+        type: integer
+      - default: 10
+        description: pagination size
+        in: query
+        name: pageSize
+        required: true
+        type: integer
+      - description: User ID
+        in: query
+        name: user_id
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/util.ResponseResult'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/schema.Repository'
+                  type: array
+              type: object
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+      security:
+      - ApiKeyAuth: []
+      summary: Query repository list
+      tags:
+      - RepositoryAPI
+    post:
+      parameters:
+      - description: Request body
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/schema.RepositoryForm'
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/util.ResponseResult'
+            - properties:
+                data:
+                  $ref: '#/definitions/schema.Repository'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+      security:
+      - ApiKeyAuth: []
+      summary: Create repository record
+      tags:
+      - RepositoryAPI
+  /api/v1/repositories/{id}:
+    delete:
+      parameters:
+      - description: unique id
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+      security:
+      - ApiKeyAuth: []
+      summary: Delete repository record by ID
+      tags:
+      - RepositoryAPI
+    get:
+      parameters:
+      - description: unique id
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/util.ResponseResult'
+            - properties:
+                data:
+                  $ref: '#/definitions/schema.Repository'
+              type: object
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+      security:
+      - ApiKeyAuth: []
+      summary: Get repository record by ID
+      tags:
+      - RepositoryAPI
+    put:
+      parameters:
+      - description: unique id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Request body
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/schema.RepositoryForm'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+      security:
+      - ApiKeyAuth: []
+      summary: Update repository record by ID
+      tags:
+      - RepositoryAPI
   /api/v1/roles:
     get:
       parameters:

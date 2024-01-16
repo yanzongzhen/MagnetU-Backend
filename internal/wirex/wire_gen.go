@@ -13,6 +13,10 @@ import (
 	"github.com/yanzongzhen/magnetu/internal/mods/rbac/api"
 	"github.com/yanzongzhen/magnetu/internal/mods/rbac/biz"
 	"github.com/yanzongzhen/magnetu/internal/mods/rbac/dal"
+	"github.com/yanzongzhen/magnetu/internal/mods/repository"
+	api3 "github.com/yanzongzhen/magnetu/internal/mods/repository/api"
+	biz3 "github.com/yanzongzhen/magnetu/internal/mods/repository/biz"
+	dal3 "github.com/yanzongzhen/magnetu/internal/mods/repository/dal"
 	"github.com/yanzongzhen/magnetu/internal/mods/sys"
 	api2 "github.com/yanzongzhen/magnetu/internal/mods/sys/api"
 	biz2 "github.com/yanzongzhen/magnetu/internal/mods/sys/biz"
@@ -125,9 +129,24 @@ func BuildInjector(ctx context.Context) (*Injector, func(), error) {
 		DB:        db,
 		LoggerAPI: apiLogger,
 	}
+	dalRepository := &dal3.Repository{
+		DB: db,
+	}
+	bizRepository := &biz3.Repository{
+		Trans:         trans,
+		RepositoryDAL: dalRepository,
+	}
+	apiRepository := &api3.Repository{
+		RepositoryBIZ: bizRepository,
+	}
+	repositoryRepository := &repository.Repository{
+		DB:            db,
+		RepositoryAPI: apiRepository,
+	}
 	modsMods := &mods.Mods{
-		RBAC: rbacRBAC,
-		SYS:  sysSYS,
+		RBAC:       rbacRBAC,
+		SYS:        sysSYS,
+		Repository: repositoryRepository,
 	}
 	injector := &Injector{
 		DB:    db,

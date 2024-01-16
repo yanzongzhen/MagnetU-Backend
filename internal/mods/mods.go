@@ -3,10 +3,11 @@ package mods
 import (
 	"context"
 
-	"github.com/yanzongzhen/magnetu/internal/mods/rbac"
-	"github.com/yanzongzhen/magnetu/internal/mods/sys"
 	"github.com/gin-gonic/gin"
 	"github.com/google/wire"
+	"github.com/yanzongzhen/magnetu/internal/mods/rbac"
+	"github.com/yanzongzhen/magnetu/internal/mods/repository"
+	"github.com/yanzongzhen/magnetu/internal/mods/sys"
 )
 
 const (
@@ -18,11 +19,13 @@ var Set = wire.NewSet(
 	wire.Struct(new(Mods), "*"),
 	rbac.Set,
 	sys.Set,
+	repository.Set,
 )
 
 type Mods struct {
-	RBAC *rbac.RBAC
-	SYS  *sys.SYS
+	RBAC       *rbac.RBAC
+	SYS        *sys.SYS
+	Repository *repository.Repository
 }
 
 func (a *Mods) Init(ctx context.Context) error {
@@ -30,6 +33,9 @@ func (a *Mods) Init(ctx context.Context) error {
 		return err
 	}
 	if err := a.SYS.Init(ctx); err != nil {
+		return err
+	}
+	if err := a.Repository.Init(ctx); err != nil {
 		return err
 	}
 
@@ -52,6 +58,9 @@ func (a *Mods) RegisterRouters(ctx context.Context, e *gin.Engine) error {
 	if err := a.SYS.RegisterV1Routers(ctx, v1); err != nil {
 		return err
 	}
+	if err := a.Repository.RegisterV1Routers(ctx, v1); err != nil {
+		return err
+	}
 
 	return nil
 }
@@ -63,5 +72,10 @@ func (a *Mods) Release(ctx context.Context) error {
 	if err := a.SYS.Release(ctx); err != nil {
 		return err
 	}
+	if err := a.Repository.
+		Release(ctx); err != nil {
+		return err
+	}
+
 	return nil
 }

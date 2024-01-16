@@ -1,0 +1,98 @@
+- name: Repository
+  comment: Repository management for Repository
+  fields:
+    - name: UserID
+      type: string
+      comment: From User.ID
+      gorm_tag: "size:20;index"
+      query: {}
+    - name: CurrentCapacity
+      type: int
+      comment: Current capacity
+      gorm_tag: "size:20;index"
+      query: {}
+    - name: MaxCapacity
+      type: int
+      comment: Max capacity
+      gorm_tag: "size:20;index"
+      query: {}
+    - name: Permissions
+      type: string
+      comment: Permissions
+      gorm_tag: "size:255"
+      query: {}
+- name: Folder
+  comment: Folder permissions for Repository
+  outputs: ["schema", "dal"]
+  disable_default_fields: true
+  fields:
+    - name: FolderID
+      type: int
+      comment: Unique ID
+      gorm_tag: "size:20;primaryKey"
+    - name: FolderName
+      type: string
+      comment: FolderName
+      gorm_tag: "size:255;index"
+      query: {}
+    - name: ParentFolderID
+      type: int
+      comment: From Folder.ID
+      gorm_tag: "size:20;index;foreignKey:ParentFolderID;references:Folder.ID"
+    - name: RepositoryID
+      type: int
+      comment: From Repository.ID
+      gorm_tag: "size:20;foreignKey:RepositoryID;references:Repository.ID"
+    - name: CreatedAt
+      type: time.Time
+      comment: Create time
+      gorm_tag: "index;"
+- name: File
+  comment: File permissions for Repository
+  outputs: ["schema", "dal"]
+  disable_default_fields: true
+  fields:
+    - name: FileID
+      type: int
+      comment: Unique ID
+      gorm_tag: "size:20;primaryKey"
+    - name: FileName
+      type: string
+      comment: FileName
+      gorm_tag: "size:255;index"
+    - name: FileExtension
+      type: string
+      comment: FileExtension
+      gorm_tag: "size:255;index"
+    - name: FileType
+      type: string
+      comment: FileType
+      gorm_tag: "size:255;index"
+    - name: FileSize
+      type: int
+      comment: FileSize
+      gorm_tag: "size:20;index"
+    - name: DownloadCount
+      type: int
+      comment: DownloadCount
+      gorm_tag: "size:20;index"
+    - name: StoragePath
+      type: string
+      comment: StoragePath
+      gorm_tag: "size:255;index"
+    - name: CloudPath
+      type: string
+      comment: CloudPath
+      gorm_tag: "size:255;index"
+    - name: ParentFolderID
+      type: int
+      comment: From Folder.ID
+      gorm_tag: "size:20;index;foreignKey:ParentFolderID;references:Folder.ID"
+    - name: RepositoryID
+      type: int
+      comment: From Repository.ID
+      gorm_tag: "size:20;foreignKey:RepositoryID;references:Repository.ID"
+    - name: UploadTime
+      type: time.Time
+      comment: Upload Time
+      gorm_tag: "index;"
