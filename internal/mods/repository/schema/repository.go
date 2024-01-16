@@ -8,7 +8,7 @@ import (
 // Repository management for Repository
 type Repository struct {
 	RepositoryID    string `gorm:"primaryKey"`
-	UserID          string // 外键，关联到用户表（如果有）
+	UserID          string `gorm:"index;not null"` // 外键，关联到用户表（如果有）
 	CurrentCapacity int64
 	MaxCapacity     int64
 	Permissions     string
