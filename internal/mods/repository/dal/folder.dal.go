@@ -52,7 +52,7 @@ func (a *Folder) Get(ctx context.Context, id string, opts ...schema.FolderQueryO
 	}
 
 	item := new(schema.Folder)
-	ok, err := util.FindOne(ctx, GetFolderDB(ctx, a.DB).Where("id=?", id), opt.QueryOptions, item)
+	ok, err := util.FindOne(ctx, GetFolderDB(ctx, a.DB).Where("folder_id=?", id), opt.QueryOptions, item)
 	if err != nil {
 		return nil, errors.WithStack(err)
 	} else if !ok {
@@ -63,7 +63,7 @@ func (a *Folder) Get(ctx context.Context, id string, opts ...schema.FolderQueryO
 
 // Exists checks if the specified folder exists in the database.
 func (a *Folder) Exists(ctx context.Context, id string) (bool, error) {
-	ok, err := util.Exists(ctx, GetFolderDB(ctx, a.DB).Where("id=?", id))
+	ok, err := util.Exists(ctx, GetFolderDB(ctx, a.DB).Where("folder_id=?", id))
 	return ok, errors.WithStack(err)
 }
 
@@ -75,12 +75,12 @@ func (a *Folder) Create(ctx context.Context, item *schema.Folder) error {
 
 // Update the specified folder in the database.
 func (a *Folder) Update(ctx context.Context, item *schema.Folder) error {
-	result := GetFolderDB(ctx, a.DB).Where("id=?", item.FolderID).Select("*").Omit("created_at").Updates(item)
+	result := GetFolderDB(ctx, a.DB).Where("folder_id=?", item.FolderID).Select("*").Omit("created_at").Updates(item)
 	return errors.WithStack(result.Error)
 }
 
 // Delete the specified folder from the database.
 func (a *Folder) Delete(ctx context.Context, id string) error {
-	result := GetFolderDB(ctx, a.DB).Where("id=?", id).Delete(new(schema.Folder))
+	result := GetFolderDB(ctx, a.DB).Where("folder_id=?", id).Delete(new(schema.Folder))
 	return errors.WithStack(result.Error)
 }

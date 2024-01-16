@@ -39,6 +39,7 @@ func (a *User) TableName() string {
 
 func (a *User) AfterCreate(db *gorm.DB) error {
 	defaultRepo := schema.Repository{
+		RepositoryID:    util.NewXID(),
 		UserID:          a.ID,
 		CurrentCapacity: 0,
 		MaxCapacity:     1024 * 1024 * 10, // 示例容量值 10GB

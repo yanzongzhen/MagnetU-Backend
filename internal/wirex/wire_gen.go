@@ -139,9 +139,31 @@ func BuildInjector(ctx context.Context) (*Injector, func(), error) {
 	apiRepository := &api3.Repository{
 		RepositoryBIZ: bizRepository,
 	}
+	folder := &dal3.Folder{
+		DB: db,
+	}
+	bizFolder := &biz3.Folder{
+		Trans:     trans,
+		FolderDAL: folder,
+	}
+	apiFolder := &api3.Folder{
+		FolderBIZ: bizFolder,
+	}
+	file := &dal3.File{
+		DB: db,
+	}
+	bizFile := &biz3.File{
+		Trans:   trans,
+		FileDAL: file,
+	}
+	apiFile := &api3.File{
+		FileBIZ: bizFile,
+	}
 	repositoryRepository := &repository.Repository{
 		DB:            db,
 		RepositoryAPI: apiRepository,
+		FolderAPI:     apiFolder,
+		FileAPI:       apiFile,
 	}
 	modsMods := &mods.Mods{
 		RBAC:       rbacRBAC,

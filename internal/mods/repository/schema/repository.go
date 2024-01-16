@@ -22,10 +22,7 @@ type Repository struct {
 type RepositoryQueryParam struct {
 	util.PaginationParam
 
-	UserID          string `form:"user_id"` // From User.ID
-	CurrentCapacity int64  `form:"-"`       // Current capacity
-	MaxCapacity     int64  `form:"-"`       // Max capacity
-	Permissions     string `form:"-"`       // Permissions
+	UserID string `form:"user_id"` // From User.ID
 }
 
 // RepositoryQueryOptions Defining the query options for the `Repository` struct.
@@ -44,10 +41,9 @@ type Repositories []*Repository
 
 // RepositoryForm Defining the data structure for creating a `Repository` struct.
 type RepositoryForm struct {
-	UserID          string `form:"user_id" binding:"required"` // From User.ID
-	CurrentCapacity int64  `form:"current_capacity"`           // Current capacity
-	MaxCapacity     int64  `form:"max_capacity"`               // Max capacity
-	Permissions     string `form:"permissions"`                // Permissions
+	CurrentCapacity int64  `form:"current_capacity"` // Current capacity
+	MaxCapacity     int64  `form:"max_capacity"`     // Max capacity
+	Permissions     string `form:"permissions"`      // Permissions
 }
 
 // Validate A validation function for the `RepositoryForm` struct.
@@ -57,7 +53,6 @@ func (a *RepositoryForm) Validate() error {
 
 // FillTo Convert `RepositoryForm` to `Repository` object.
 func (a *RepositoryForm) FillTo(repository *Repository) error {
-	repository.UserID = a.UserID
 	repository.CurrentCapacity = a.CurrentCapacity
 	repository.MaxCapacity = a.MaxCapacity
 	repository.Permissions = a.Permissions

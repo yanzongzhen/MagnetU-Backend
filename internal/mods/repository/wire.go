@@ -13,5 +13,9 @@ var Set = wire.NewSet(
 	wire.Struct(new(biz.Repository), "*"),
 	wire.Struct(new(api.Repository), "*"),
 	wire.Struct(new(dal.Folder), "*"),
+	wire.Struct(new(biz.Folder), "*"),
+	wire.Struct(new(api.Folder), "*"),
 	wire.Struct(new(dal.File), "*"),
+	wire.Struct(new(biz.File), "*"),
+	wire.Struct(new(api.File), "*"),
 )

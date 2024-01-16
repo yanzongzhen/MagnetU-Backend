@@ -30,15 +30,6 @@ func (a *Repository) Query(ctx context.Context, params schema.RepositoryQueryPar
 	if v := params.UserID; len(v) > 0 {
 		db = db.Where("user_id = ?", v)
 	}
-	if v := params.CurrentCapacity; v != 0 {
-		db = db.Where("current_capacity = ?", v)
-	}
-	if v := params.MaxCapacity; v != 0 {
-		db = db.Where("max_capacity = ?", v)
-	}
-	if v := params.Permissions; len(v) > 0 {
-		db = db.Where("permissions = ?", v)
-	}
 
 	var list schema.Repositories
 	pageResult, err := util.WrapPageQuery(ctx, db, params.PaginationParam, opt.QueryOptions, &list)
@@ -61,7 +52,7 @@ func (a *Repository) Get(ctx context.Context, id string, opts ...schema.Reposito
 	}
 
 	item := new(schema.Repository)
-	ok, err := util.FindOne(ctx, GetRepositoryDB(ctx, a.DB).Where("id=?", id), opt.QueryOptions, item)
+	ok, err := util.FindOne(ctx, GetRepositoryDB(ctx, a.DB).Where("repository_id=?", id), opt.QueryOptions, item)
 	if err != nil {
 		return nil, errors.WithStack(err)
 	} else if !ok {
@@ -72,7 +63,7 @@ func (a *Repository) Get(ctx context.Context, id string, opts ...schema.Reposito
 
 // Exists checks if the specified repository exists in the database.
 func (a *Repository) Exists(ctx context.Context, id string) (bool, error) {
-	ok, err := util.Exists(ctx, GetRepositoryDB(ctx, a.DB).Where("id=?", id))
+	ok, err := util.Exists(ctx, GetRepositoryDB(ctx, a.DB).Where("repository_id=?", id))
 	return ok, errors.WithStack(err)
 }
 
@@ -84,12 +75,12 @@ func (a *Repository) Create(ctx context.Context, item *schema.Repository) error 
 
 // Update the specified repository in the database.
 func (a *Repository) Update(ctx context.Context, item *schema.Repository) error {
-	result := GetRepositoryDB(ctx, a.DB).Where("id=?", item.RepositoryID).Select("*").Omit("created_at").Updates(item)
+	result := GetRepositoryDB(ctx, a.DB).Where("repository_id=?", item.RepositoryID).Select("*").Omit("created_at").Updates(item)
 	return errors.WithStack(result.Error)
 }
 
 // Delete the specified repository from the database.
 func (a *Repository) Delete(ctx context.Context, id string) error {
-	result := GetRepositoryDB(ctx, a.DB).Where("id=?", id).Delete(new(schema.Repository))
+	result := GetRepositoryDB(ctx, a.DB).Where("repository_id=?", id).Delete(new(schema.Repository))
 	return errors.WithStack(result.Error)
 }
