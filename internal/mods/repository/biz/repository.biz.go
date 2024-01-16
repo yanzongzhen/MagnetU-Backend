@@ -47,8 +47,8 @@ func (a *Repository) Get(ctx context.Context, id string) (*schema.Repository, er
 // Create a new repository in the data access object.
 func (a *Repository) Create(ctx context.Context, formItem *schema.RepositoryForm) (*schema.Repository, error) {
 	repository := &schema.Repository{
-		ID:        util.NewXID(),
-		CreatedAt: time.Now(),
+		RepositoryID: util.NewXID(),
+		CreatedAt:    time.Now(),
 	}
 
 	if err := formItem.FillTo(repository); err != nil {

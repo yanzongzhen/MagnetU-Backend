@@ -8,11 +8,14 @@ import (
 
 // Folder permissions for Repository
 type Folder struct {
-	FolderID       string    `json:"folder_id" gorm:"size:20;primaryKey"`                                                  // Unique ID
-	FolderName     string    `json:"folder_name" gorm:"size:255;index"`                                                    // FolderName
-	ParentFolderID string    `json:"parent_folder_id" gorm:"size:20;index;foreignKey:ParentFolderID;references:Folder.ID"` // From Folder.ID
-	RepositoryID   string    `json:"repository_id" gorm:"size:20;foreignKey:RepositoryID;references:Repository.ID"`        // From Repository.ID
-	CreatedAt      time.Time `json:"created_at" gorm:"index;"`                                                             // Create time
+	FolderID       string `gorm:"primaryKey"`
+	FolderName     string
+	ParentFolderID *string    `gorm:"index;"`
+	RepositoryID   string     `gorm:"index;foreignKey"`
+	CreatedAt      time.Time  `json:"created_at"`                // Create time
+	UpdateAt       time.Time  `json:"update_at"`                 // Update time
+	Repository     Repository `gorm:"foreignKey:RepositoryID"`   // 与 Repository 的关联
+	Files          []File     `gorm:"foreignKey:ParentFolderID"` // 与 File 的关联
 }
 
 // FolderQueryParam Defining the query parameters for the `Folder` struct.
@@ -38,9 +41,7 @@ type Folders []*Folder
 
 // FolderForm Defining the data structure for creating a `Folder` struct.
 type FolderForm struct {
-	FolderName     string `form:"folder_name" binding:"required"`      // FolderName
-	ParentFolderID string `form:"parent_folder_id" binding:"required"` // ParentFolderID
-	RepositoryID   string `form:"repository_id" binding:"required"`    // RepositoryID
+	FolderName string `form:"folder_name" binding:"required"` // FolderName
 }
 
 // Validate A validation function for the `FolderForm` struct.
@@ -51,7 +52,5 @@ func (a *FolderForm) Validate() error {
 // FillTo Convert `FolderForm` to `Folder` object.
 func (a *FolderForm) FillTo(folder *Folder) error {
 	folder.FolderName = a.FolderName
-	folder.ParentFolderID = a.ParentFolderID
-	folder.RepositoryID = a.RepositoryID
 	return nil
 }

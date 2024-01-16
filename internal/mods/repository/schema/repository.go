@@ -1,20 +1,21 @@
 package schema
 
 import (
-	"time"
-
 	"github.com/yanzongzhen/magnetu/pkg/util"
+	"time"
 )
 
 // Repository management for Repository
 type Repository struct {
-	ID              string    `json:"id" gorm:"size:20;primaryKey;"`         // Unique ID
-	UserID          string    `json:"user_id" gorm:"size:20;index"`          // From User.ID
-	CurrentCapacity int       `json:"current_capacity" gorm:"size:20;index"` // Current capacity
-	MaxCapacity     int       `json:"max_capacity" gorm:"size:20;index"`     // Max capacity
-	Permissions     string    `json:"permissions" gorm:"size:255"`           // Permissions
-	CreatedAt       time.Time `json:"created_at" gorm:"index;"`              // Create time
-	UpdatedAt       time.Time `json:"updated_at" gorm:"index;"`              // Update time
+	RepositoryID    string `gorm:"primaryKey"`
+	UserID          string // 外键，关联到用户表（如果有）
+	CurrentCapacity int64
+	MaxCapacity     int64
+	Permissions     string
+	Folders         []Folder  `gorm:"foreignKey:RepositoryID"` // 与 Folder 的关联
+	Files           []File    `gorm:"foreignKey:RepositoryID"` // 与 File 的关联
+	CreatedAt       time.Time `json:"created_at"`              // Create time
+	UpdatedAt       time.Time `json:"updated_at"`
 }
 
 // RepositoryQueryParam Defining the query parameters for the `Repository` struct.
@@ -22,8 +23,8 @@ type RepositoryQueryParam struct {
 	util.PaginationParam
 
 	UserID          string `form:"user_id"` // From User.ID
-	CurrentCapacity int    `form:"-"`       // Current capacity
-	MaxCapacity     int    `form:"-"`       // Max capacity
+	CurrentCapacity int64  `form:"-"`       // Current capacity
+	MaxCapacity     int64  `form:"-"`       // Max capacity
 	Permissions     string `form:"-"`       // Permissions
 }
 
@@ -44,8 +45,8 @@ type Repositories []*Repository
 // RepositoryForm Defining the data structure for creating a `Repository` struct.
 type RepositoryForm struct {
 	UserID          string `form:"user_id" binding:"required"` // From User.ID
-	CurrentCapacity int    `form:"current_capacity"`           // Current capacity
-	MaxCapacity     int    `form:"max_capacity"`               // Max capacity
+	CurrentCapacity int64  `form:"current_capacity"`           // Current capacity
+	MaxCapacity     int64  `form:"max_capacity"`               // Max capacity
 	Permissions     string `form:"permissions"`                // Permissions
 }
 

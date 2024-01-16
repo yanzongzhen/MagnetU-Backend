@@ -84,7 +84,7 @@ func (a *Repository) Create(ctx context.Context, item *schema.Repository) error 
 
 // Update the specified repository in the database.
 func (a *Repository) Update(ctx context.Context, item *schema.Repository) error {
-	result := GetRepositoryDB(ctx, a.DB).Where("id=?", item.ID).Select("*").Omit("created_at").Updates(item)
+	result := GetRepositoryDB(ctx, a.DB).Where("id=?", item.RepositoryID).Select("*").Omit("created_at").Updates(item)
 	return errors.WithStack(result.Error)
 }
 
