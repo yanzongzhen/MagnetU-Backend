@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/yanzongzhen/magnetu/internal/mods/repository/biz"
 	"github.com/yanzongzhen/magnetu/internal/mods/repository/schema"
+
 	"github.com/yanzongzhen/magnetu/pkg/util"
 )
 
