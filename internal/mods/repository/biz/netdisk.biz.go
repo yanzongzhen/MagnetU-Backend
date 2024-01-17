@@ -37,13 +37,13 @@ func (a *NetDisk) Query(ctx context.Context, params schema.FileQueryParam) (*sch
 
 // Get the specified NetDisk from the data access object.
 func (a *NetDisk) Get(ctx context.Context, id string) (*schema.File, error) {
-	File, err := a.FileDAL.Get(ctx, id)
+	file, err := a.FileDAL.Get(ctx, id)
 	if err != nil {
 		return nil, err
-	} else if File == nil {
+	} else if file == nil {
 		return nil, errors.NotFound("", "File not found")
 	}
-	return File, nil
+	return file, nil
 }
 
 // Create a new File in the data access object.
