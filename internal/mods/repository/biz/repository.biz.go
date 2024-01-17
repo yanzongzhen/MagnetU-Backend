@@ -14,6 +14,7 @@ import (
 type Repository struct {
 	Trans         *util.Trans
 	RepositoryDAL *dal.Repository
+	FileDAL       *dal.File
 }
 
 // Query repositories from the data access object based on the provided parameters and options.
@@ -54,7 +55,6 @@ func (a *Repository) Create(ctx context.Context, formItem *schema.RepositoryForm
 	if err := formItem.FillTo(repository); err != nil {
 		return nil, err
 	}
-
 	err := a.Trans.Exec(ctx, func(ctx context.Context) error {
 		if err := a.RepositoryDAL.Create(ctx, repository); err != nil {
 			return err
@@ -100,6 +100,10 @@ func (a *Repository) Delete(ctx context.Context, id string) error {
 
 	return a.Trans.Exec(ctx, func(ctx context.Context) error {
 		if err := a.RepositoryDAL.Delete(ctx, id); err != nil {
+			return err
+		}
+		// Delete all files in the repository
+		if err := a.FileDAL.DeleteByRepoID(ctx, id); err != nil {
 			return err
 		}
 		return nil

@@ -11,8 +11,7 @@ type Repository struct {
 	UserID          string    `gorm:"index;not null"`          // 外键，关联到用户表（如果有）
 	CurrentCapacity int64     `gorm:"default:0"`               // Current capacity
 	MaxCapacity     int64     `gorm:"default:10485760"`        // Max capacity
-	Folders         []Folder  `gorm:"foreignKey:RepositoryID"` // 与 Folder 的关联
-	Files           []File    `gorm:"foreignKey:RepositoryID"` // 与 File 的关联
+	Files           Files     `gorm:"foreignKey:RepositoryID"` // 与 File 的关联
 	CreatedAt       time.Time `json:"created_at"`              // Create time
 	UpdatedAt       time.Time `json:"updated_at"`
 }
@@ -42,6 +41,7 @@ type Repositories []*Repository
 type RepositoryForm struct {
 	CurrentCapacity int64 `form:"current_capacity"` // Current capacity
 	MaxCapacity     int64 `form:"max_capacity"`     // Max capacity
+	Files           Files
 }
 
 // Validate A validation function for the `RepositoryForm` struct.

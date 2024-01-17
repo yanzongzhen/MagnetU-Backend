@@ -9,6 +9,10 @@ package wirex
 import (
 	"context"
 	"github.com/yanzongzhen/magnetu/internal/mods"
+	"github.com/yanzongzhen/magnetu/internal/mods/cloud"
+	api4 "github.com/yanzongzhen/magnetu/internal/mods/cloud/api"
+	biz4 "github.com/yanzongzhen/magnetu/internal/mods/cloud/biz"
+	dal4 "github.com/yanzongzhen/magnetu/internal/mods/cloud/dal"
 	"github.com/yanzongzhen/magnetu/internal/mods/rbac"
 	"github.com/yanzongzhen/magnetu/internal/mods/rbac/api"
 	"github.com/yanzongzhen/magnetu/internal/mods/rbac/biz"
@@ -139,16 +143,6 @@ func BuildInjector(ctx context.Context) (*Injector, func(), error) {
 	apiRepository := &api3.Repository{
 		RepositoryBIZ: bizRepository,
 	}
-	folder := &dal3.Folder{
-		DB: db,
-	}
-	bizFolder := &biz3.Folder{
-		Trans:     trans,
-		FolderDAL: folder,
-	}
-	apiFolder := &api3.Folder{
-		FolderBIZ: bizFolder,
-	}
 	file := &dal3.File{
 		DB: db,
 	}
@@ -162,13 +156,27 @@ func BuildInjector(ctx context.Context) (*Injector, func(), error) {
 	repositoryRepository := &repository.Repository{
 		DB:            db,
 		RepositoryAPI: apiRepository,
-		FolderAPI:     apiFolder,
 		FileAPI:       apiFile,
+	}
+	dalCloud := &dal4.Cloud{
+		DB: db,
+	}
+	bizCloud := &biz4.Cloud{
+		Trans:    trans,
+		CloudDAL: dalCloud,
+	}
+	apiCloud := &api4.Cloud{
+		CloudBIZ: bizCloud,
+	}
+	cloudCLOUD := &cloud.CLOUD{
+		DB:       db,
+		CloudAPI: apiCloud,
 	}
 	modsMods := &mods.Mods{
 		RBAC:       rbacRBAC,
 		SYS:        sysSYS,
 		Repository: repositoryRepository,
+		CLOUD:      cloudCLOUD,
 	}
 	injector := &Injector{
 		DB:    db,

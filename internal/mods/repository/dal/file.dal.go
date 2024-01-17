@@ -81,3 +81,9 @@ func (a *File) Delete(ctx context.Context, id string) error {
 	result := GetFileDB(ctx, a.DB).Where("file_id=?", id).Delete(new(schema.File))
 	return errors.WithStack(result.Error)
 }
+
+// DeleteByRepoID the specified file from the database.
+func (a *File) DeleteByRepoID(ctx context.Context, id string) error {
+	result := GetFileDB(ctx, a.DB).Where("repository_id=?", id).Delete(new(schema.File))
+	return errors.WithStack(result.Error)
+}

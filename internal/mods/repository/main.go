@@ -12,12 +12,11 @@ import (
 type Repository struct {
 	DB            *gorm.DB
 	RepositoryAPI *api.Repository
-	FolderAPI     *api.Folder
 	FileAPI       *api.File
 }
 
 func (a *Repository) AutoMigrate(ctx context.Context) error {
-	return a.DB.AutoMigrate(new(schema.Repository), new(schema.Folder), new(schema.File))
+	return a.DB.AutoMigrate(new(schema.Repository), new(schema.File))
 }
 
 func (a *Repository) Init(ctx context.Context) error {
@@ -35,14 +34,6 @@ func (a *Repository) RegisterV1Routers(ctx context.Context, v1 *gin.RouterGroup)
 		repository.POST("", a.RepositoryAPI.Create)
 		repository.PUT(":id", a.RepositoryAPI.Update)
 		repository.DELETE(":id", a.RepositoryAPI.Delete)
-	}
-	folder := v1.Group("folders")
-	{
-		folder.GET("", a.FolderAPI.Query)
-		folder.GET(":id", a.FolderAPI.Get)
-		folder.POST("", a.FolderAPI.Create)
-		folder.PUT(":id", a.FolderAPI.Update)
-		folder.DELETE(":id", a.FolderAPI.Delete)
 	}
 	file := v1.Group("files")
 	{

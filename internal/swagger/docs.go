@@ -80,6 +80,281 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/v1/clouds": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "CloudAPI"
+                ],
+                "summary": "Query cloud list",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "default": 1,
+                        "description": "pagination index",
+                        "name": "current",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "default": 10,
+                        "description": "pagination size",
+                        "name": "pageSize",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/util.ResponseResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/schema.Cloud"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "CloudAPI"
+                ],
+                "summary": "Create cloud record",
+                "parameters": [
+                    {
+                        "description": "Request body",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/schema.CloudForm"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/util.ResponseResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/schema.Cloud"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/clouds/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "CloudAPI"
+                ],
+                "summary": "Get cloud record by ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "unique id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/util.ResponseResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/schema.Cloud"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "CloudAPI"
+                ],
+                "summary": "Update cloud record by ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "unique id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Request body",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/schema.CloudForm"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "CloudAPI"
+                ],
+                "summary": "Delete cloud record by ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "unique id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/current/logout": {
             "post": {
                 "security": [
@@ -587,281 +862,6 @@ const docTemplate = `{
                     "FileAPI"
                 ],
                 "summary": "Delete File record by ID",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "unique id",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/util.ResponseResult"
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized",
-                        "schema": {
-                            "$ref": "#/definitions/util.ResponseResult"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/util.ResponseResult"
-                        }
-                    }
-                }
-            }
-        },
-        "/api/v1/folders": {
-            "get": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "tags": [
-                    "FolderAPI"
-                ],
-                "summary": "Query Folder list",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "default": 1,
-                        "description": "pagination index",
-                        "name": "current",
-                        "in": "query",
-                        "required": true
-                    },
-                    {
-                        "type": "integer",
-                        "default": 10,
-                        "description": "pagination size",
-                        "name": "pageSize",
-                        "in": "query",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/util.ResponseResult"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "type": "array",
-                                            "items": {
-                                                "$ref": "#/definitions/schema.Folder"
-                                            }
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized",
-                        "schema": {
-                            "$ref": "#/definitions/util.ResponseResult"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/util.ResponseResult"
-                        }
-                    }
-                }
-            },
-            "post": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "tags": [
-                    "FolderAPI"
-                ],
-                "summary": "Create Folder record",
-                "parameters": [
-                    {
-                        "description": "Request body",
-                        "name": "body",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/schema.FolderForm"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/util.ResponseResult"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "$ref": "#/definitions/schema.Folder"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/util.ResponseResult"
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized",
-                        "schema": {
-                            "$ref": "#/definitions/util.ResponseResult"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/util.ResponseResult"
-                        }
-                    }
-                }
-            }
-        },
-        "/api/v1/folders/{id}": {
-            "get": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "tags": [
-                    "FolderAPI"
-                ],
-                "summary": "Get Folder record by ID",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "unique id",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/util.ResponseResult"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "$ref": "#/definitions/schema.Folder"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized",
-                        "schema": {
-                            "$ref": "#/definitions/util.ResponseResult"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/util.ResponseResult"
-                        }
-                    }
-                }
-            },
-            "put": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "tags": [
-                    "FolderAPI"
-                ],
-                "summary": "Update Folder record by ID",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "unique id",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "description": "Request body",
-                        "name": "body",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/schema.FolderForm"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/util.ResponseResult"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/util.ResponseResult"
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized",
-                        "schema": {
-                            "$ref": "#/definitions/util.ResponseResult"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/util.ResponseResult"
-                        }
-                    }
-                }
-            },
-            "delete": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "tags": [
-                    "FolderAPI"
-                ],
-                "summary": "Delete Folder record by ID",
                 "parameters": [
                     {
                         "type": "string",
@@ -2260,50 +2260,83 @@ const docTemplate = `{
                 }
             }
         },
-        "schema.File": {
+        "schema.Cloud": {
             "type": "object",
             "properties": {
-                "cloud_path": {
-                    "description": "CloudPath",
+                "created_at": {
+                    "description": "Create time",
                     "type": "string"
                 },
-                "download_count": {
-                    "description": "DownloadCount",
-                    "type": "integer"
-                },
-                "file_extension": {
-                    "description": "FileExtension",
-                    "type": "string"
-                },
-                "file_id": {
+                "id": {
                     "description": "Unique ID",
                     "type": "string"
                 },
-                "file_name": {
-                    "description": "FileName",
+                "updated_at": {
+                    "description": "Update time",
+                    "type": "string"
+                }
+            }
+        },
+        "schema.CloudForm": {
+            "type": "object"
+        },
+        "schema.File": {
+            "type": "object",
+            "properties": {
+                "cloudPath": {
                     "type": "string"
                 },
-                "file_size": {
-                    "description": "FileSize",
+                "create_at": {
+                    "description": "Create time",
+                    "type": "string"
+                },
+                "fileExtension": {
+                    "type": "string"
+                },
+                "fileID": {
+                    "type": "string"
+                },
+                "fileName": {
+                    "type": "string"
+                },
+                "fileSize": {
                     "type": "integer"
                 },
-                "file_type": {
-                    "description": "FileType",
+                "fileType": {
                     "type": "string"
                 },
-                "parent_folder_id": {
-                    "description": "From Folder.ID",
+                "files": {
+                    "description": "与 Folder 的关联",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/schema.File"
+                    }
+                },
+                "isFolder": {
+                    "type": "boolean"
+                },
+                "parentFileID": {
                     "type": "string"
                 },
-                "repository_id": {
-                    "description": "From Repository.ID",
+                "remark": {
                     "type": "string"
                 },
-                "storage_path": {
-                    "description": "StoragePath",
+                "repository": {
+                    "description": "与 Repository 的关联",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/schema.Repository"
+                        }
+                    ]
+                },
+                "repositoryID": {
                     "type": "string"
                 },
-                "upload_time": {
+                "storagePath": {
+                    "type": "string"
+                },
+                "update_at": {
+                    "description": "Update time",
                     "type": "string"
                 }
             }
@@ -2315,13 +2348,14 @@ const docTemplate = `{
                 "file_name",
                 "file_size",
                 "file_type",
-                "parent_folder_id",
-                "repository_id",
                 "storage_path"
             ],
             "properties": {
                 "cloud_path": {
                     "description": "CloudPath",
+                    "type": "string"
+                },
+                "createAt": {
                     "type": "string"
                 },
                 "download_count": {
@@ -2344,67 +2378,19 @@ const docTemplate = `{
                     "description": "FileType",
                     "type": "string"
                 },
-                "parent_folder_id": {
-                    "description": "ParentFolderID",
-                    "type": "string"
+                "is_folder": {
+                    "description": "IsFolder",
+                    "type": "boolean"
                 },
-                "repository_id": {
-                    "description": "RepositoryID",
+                "remark": {
+                    "description": "Remark",
                     "type": "string"
                 },
                 "storage_path": {
                     "description": "StoragePath",
                     "type": "string"
                 },
-                "upload_time": {
-                    "description": "Upload Time",
-                    "type": "string"
-                }
-            }
-        },
-        "schema.Folder": {
-            "type": "object",
-            "properties": {
-                "created_at": {
-                    "description": "Create time",
-                    "type": "string"
-                },
-                "folder_id": {
-                    "description": "Unique ID",
-                    "type": "string"
-                },
-                "folder_name": {
-                    "description": "FolderName",
-                    "type": "string"
-                },
-                "parent_folder_id": {
-                    "description": "From Folder.ID",
-                    "type": "string"
-                },
-                "repository_id": {
-                    "description": "From Repository.ID",
-                    "type": "string"
-                }
-            }
-        },
-        "schema.FolderForm": {
-            "type": "object",
-            "required": [
-                "folder_name",
-                "parent_folder_id",
-                "repository_id"
-            ],
-            "properties": {
-                "folder_name": {
-                    "description": "FolderName",
-                    "type": "string"
-                },
-                "parent_folder_id": {
-                    "description": "ParentFolderID",
-                    "type": "string"
-                },
-                "repository_id": {
-                    "description": "RepositoryID",
+                "updateAt": {
                     "type": "string"
                 }
             }
@@ -2673,37 +2659,36 @@ const docTemplate = `{
                     "description": "Create time",
                     "type": "string"
                 },
-                "current_capacity": {
+                "currentCapacity": {
                     "description": "Current capacity",
                     "type": "integer"
                 },
-                "id": {
-                    "description": "Unique ID",
-                    "type": "string"
+                "files": {
+                    "description": "与 File 的关联",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/schema.File"
+                    }
                 },
-                "max_capacity": {
+                "maxCapacity": {
                     "description": "Max capacity",
                     "type": "integer"
                 },
-                "permissions": {
-                    "description": "Permissions",
+                "repositoryID": {
+                    "description": "always equal to UserID",
                     "type": "string"
                 },
                 "updated_at": {
-                    "description": "Update time",
                     "type": "string"
                 },
-                "user_id": {
-                    "description": "From User.ID",
+                "userID": {
+                    "description": "外键，关联到用户表（如果有）",
                     "type": "string"
                 }
             }
         },
         "schema.RepositoryForm": {
             "type": "object",
-            "required": [
-                "user_id"
-            ],
             "properties": {
                 "current_capacity": {
                     "description": "Current capacity",
@@ -2712,14 +2697,6 @@ const docTemplate = `{
                 "max_capacity": {
                     "description": "Max capacity",
                     "type": "integer"
-                },
-                "permissions": {
-                    "description": "Permissions",
-                    "type": "string"
-                },
-                "user_id": {
-                    "description": "From User.ID",
-                    "type": "string"
                 }
             }
         },
@@ -2907,6 +2884,14 @@ const docTemplate = `{
                     "description": "Remark of user",
                     "type": "string"
                 },
+                "repository": {
+                    "description": "Repository of user",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/schema.Repository"
+                        }
+                    ]
+                },
                 "roles": {
                     "description": "Roles of user",
                     "type": "array",
@@ -2961,6 +2946,9 @@ const docTemplate = `{
                     "description": "Remark of user",
                     "type": "string",
                     "maxLength": 1024
+                },
+                "repository": {
+                    "$ref": "#/definitions/schema.Repository"
                 },
                 "roles": {
                     "description": "Roles of user",

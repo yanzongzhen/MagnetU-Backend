@@ -47,8 +47,8 @@ func (a *File) Get(ctx context.Context, id string) (*schema.File, error) {
 // Create a new File in the data access object.
 func (a *File) Create(ctx context.Context, formItem *schema.FileForm) (*schema.File, error) {
 	File := &schema.File{
-		FileID:     util.NewXID(),
-		UploadTime: time.Now(),
+		FileID:   util.NewXID(),
+		CreateAt: time.Now(),
 	}
 
 	if err := formItem.FillTo(File); err != nil {
@@ -75,6 +75,8 @@ func (a *File) Update(ctx context.Context, id string, formItem *schema.FileForm)
 	} else if File == nil {
 		return errors.NotFound("", "File not found")
 	}
+
+	File.UpdateAt = time.Now()
 
 	if err := formItem.FillTo(File); err != nil {
 		return err
