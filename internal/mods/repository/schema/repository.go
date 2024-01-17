@@ -7,11 +7,10 @@ import (
 
 // Repository management for Repository
 type Repository struct {
-	RepositoryID    string `gorm:"primaryKey"`
-	UserID          string `gorm:"index;not null"` // 外键，关联到用户表（如果有）
-	CurrentCapacity int64
-	MaxCapacity     int64
-	Permissions     string
+	RepositoryID    string    `gorm:"primaryKey"`              // always equal to UserID
+	UserID          string    `gorm:"index;not null"`          // 外键，关联到用户表（如果有）
+	CurrentCapacity int64     `gorm:"default:0"`               // Current capacity
+	MaxCapacity     int64     `gorm:"default:10485760"`        // Max capacity
 	Folders         []Folder  `gorm:"foreignKey:RepositoryID"` // 与 Folder 的关联
 	Files           []File    `gorm:"foreignKey:RepositoryID"` // 与 File 的关联
 	CreatedAt       time.Time `json:"created_at"`              // Create time
@@ -41,9 +40,8 @@ type Repositories []*Repository
 
 // RepositoryForm Defining the data structure for creating a `Repository` struct.
 type RepositoryForm struct {
-	CurrentCapacity int64  `form:"current_capacity"` // Current capacity
-	MaxCapacity     int64  `form:"max_capacity"`     // Max capacity
-	Permissions     string `form:"permissions"`      // Permissions
+	CurrentCapacity int64 `form:"current_capacity"` // Current capacity
+	MaxCapacity     int64 `form:"max_capacity"`     // Max capacity
 }
 
 // Validate A validation function for the `RepositoryForm` struct.
@@ -55,6 +53,5 @@ func (a *RepositoryForm) Validate() error {
 func (a *RepositoryForm) FillTo(repository *Repository) error {
 	repository.CurrentCapacity = a.CurrentCapacity
 	repository.MaxCapacity = a.MaxCapacity
-	repository.Permissions = a.Permissions
 	return nil
 }

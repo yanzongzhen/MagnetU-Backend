@@ -7,6 +7,7 @@ import (
 	"github.com/yanzongzhen/magnetu/internal/config"
 	"github.com/yanzongzhen/magnetu/internal/mods/rbac/dal"
 	"github.com/yanzongzhen/magnetu/internal/mods/rbac/schema"
+	repoSchema "github.com/yanzongzhen/magnetu/internal/mods/repository/schema"
 	"github.com/yanzongzhen/magnetu/pkg/cachex"
 	"github.com/yanzongzhen/magnetu/pkg/crypto/hash"
 	"github.com/yanzongzhen/magnetu/pkg/errors"
@@ -96,6 +97,15 @@ func (a *User) Create(ctx context.Context, formItem *schema.UserForm) (*schema.U
 	if formItem.Password == "" {
 		formItem.Password = config.C.General.DefaultLoginPwd
 	}
+
+	repo := &repoSchema.Repository{
+		RepositoryID:    user.ID,
+		UserID:          user.ID,
+		CurrentCapacity: 0,
+		MaxCapacity:     10 * 1024 * 1024,
+	}
+
+	user.Repository = *repo
 
 	if err := formItem.FillTo(user); err != nil {
 		return nil, err

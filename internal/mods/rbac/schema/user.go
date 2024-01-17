@@ -2,7 +2,6 @@ package schema
 
 import (
 	"github.com/yanzongzhen/magnetu/internal/mods/repository/schema"
-	"gorm.io/gorm"
 	"time"
 
 	"github.com/go-playground/validator/v10"
@@ -35,17 +34,6 @@ type User struct {
 
 func (a *User) TableName() string {
 	return config.C.FormatTableName("user")
-}
-
-func (a *User) AfterCreate(db *gorm.DB) error {
-	defaultRepo := schema.Repository{
-		RepositoryID:    util.NewXID(),
-		UserID:          a.ID,
-		CurrentCapacity: 0,
-		MaxCapacity:     1024 * 1024 * 10, // 示例容量值 10GB
-		Permissions:     "R/W",
-	}
-	return db.Create(&defaultRepo).Error
 }
 
 // Defining the query parameters for the `User` struct.
@@ -107,6 +95,7 @@ func (a *UserForm) FillTo(user *User) error {
 	user.Email = a.Email
 	user.Remark = a.Remark
 	user.Status = a.Status
+	user.Repository = a.Repository
 
 	if pass := a.Password; pass != "" {
 		hashPass, err := hash.GeneratePassword(pass)
