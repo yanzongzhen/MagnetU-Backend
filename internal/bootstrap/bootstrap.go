@@ -67,6 +67,12 @@ func Run(ctx context.Context, runCfg RunConfig) error {
 		}()
 	}
 
+	// init oss
+	err = InitOSS()
+	if err != nil {
+		return err
+	}
+
 	// Build injector.
 	injector, cleanInjectorFn, err := wirex.BuildInjector(ctx)
 	if err != nil {

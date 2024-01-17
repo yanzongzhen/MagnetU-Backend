@@ -8,18 +8,19 @@ import (
 
 // Cloud file management
 type Cloud struct {
-	ID        string    `json:"id" gorm:"size:20;primaryKey;"` // Unique ID
-	RawID     string    `json:"raw_id" gorm:"size:20;index;"`  // Raw ID
-	Name      string    `json:"name" gorm:"size:255;index"`    // Name
-	BTIH      string    `json:"btih" gorm:"size:64;"`          // BTIH
-	IDX       string    `json:"idx" gorm:"size:64;"`           // IDX
-	Source    string    `json:"source" gorm:"size:255;"`       // Source
-	URL       string    `json:"url" gorm:"size:255;"`          // URL
-	FileMeta  string    `json:"file_meta" gorm:"size:1024;"`   // Meta
-	Size      int64     `json:"size" gorm:"size:20;"`          // Size
-	OSS       string    `json:"oss" gorm:"size:255;"`          // OSS
-	CreatedAt time.Time `json:"created_at" gorm:"index;"`      // Create time
-	UpdatedAt time.Time `json:"updated_at" gorm:"index;"`      // Update time
+	ID        string    `json:"id" gorm:"size:20;primaryKey;"`            // Unique ID
+	RawID     string    `json:"raw_id" gorm:"size:20;index;"`             // Raw ID
+	Name      string    `json:"name" gorm:"size:255;index"`               // Name
+	BTIH      string    `json:"btih" gorm:"size:64;"`                     // BTIH
+	IDX       string    `json:"idx" gorm:"size:64;"`                      // IDX
+	Source    string    `json:"source" gorm:"size:255;"`                  // Source
+	URL       string    `json:"url" gorm:"size:255;"`                     // URL
+	FileMeta  string    `json:"file_meta" gorm:"size:1024;"`              // Meta
+	Size      int64     `json:"size" gorm:"size:20;"`                     // Size
+	OSS       string    `json:"oss" gorm:"size:255;"`                     // OSS
+	Way       string    `json:"way" gorm:"size:20;oneof=upload transfer"` // Way
+	CreatedAt time.Time `json:"created_at" gorm:"index;"`                 // Create time
+	UpdatedAt time.Time `json:"updated_at" gorm:"index;"`                 // Update time
 }
 
 // CloudQueryParam Defining the query parameters for the `Cloud` struct.

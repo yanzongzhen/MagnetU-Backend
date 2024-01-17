@@ -12,6 +12,24 @@ type Cloud struct {
 	CloudBIZ *biz.Cloud
 }
 
+// Upload
+// @Tags CloudAPI
+// @Security ApiKeyAuth
+// @Summary Upload file
+// @Param file formData file true "file"
+// @Success 200 {object} util.ResponseResult
+// @Failure 401 {object} util.ResponseResult
+// @Failure 500 {object} util.ResponseResult
+// @Router /api/v1/upload [post]
+func (a *Cloud) Upload(c *gin.Context) {
+	res, err := a.CloudBIZ.Upload(c)
+	if err != nil {
+		util.ResError(c, err)
+		return
+	}
+	util.ResSuccess(c, res)
+}
+
 // Query
 // @Tags CloudAPI
 // @Security ApiKeyAuth

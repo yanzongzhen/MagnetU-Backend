@@ -28,6 +28,7 @@ func (a *CLOUD) Init(ctx context.Context) error {
 func (a *CLOUD) RegisterV1Routers(ctx context.Context, v1 *gin.RouterGroup) error {
 	cloud := v1.Group("clouds")
 	{
+		cloud.POST("upload", a.CloudAPI.Upload)
 		cloud.GET("", a.CloudAPI.Query)
 		cloud.GET(":id", a.CloudAPI.Get)
 		cloud.POST("", a.CloudAPI.Create)

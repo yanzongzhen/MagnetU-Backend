@@ -14,6 +14,24 @@ type Config struct {
 	Middleware Middleware
 	Util       Util
 	Dictionary Dictionary
+	OSS        OSS
+}
+
+type OSS struct {
+	Minio struct {
+		Domain          string
+		Endpoint        string
+		AccessKeyID     string
+		SecretAccessKey string
+	}
+	S3 struct {
+		Domain          string
+		Region          string
+		AccessKeyID     string
+		SecretAccessKey string
+	}
+	BucketName string
+	Prefix     string
 }
 
 type General struct {
@@ -63,12 +81,12 @@ type Storage struct {
 	}
 	DB struct {
 		Debug        bool
-		Type         string `default:"sqlite3"`          // sqlite3/mysql/postgres
+		Type         string `default:"sqlite3"`         // sqlite3/mysql/postgres
 		DSN          string `default:"data/magnetu.db"` // database source name
-		MaxLifetime  int    `default:"86400"`            // seconds
-		MaxIdleTime  int    `default:"3600"`             // seconds
-		MaxOpenConns int    `default:"100"`              // connections
-		MaxIdleConns int    `default:"50"`               // connections
+		MaxLifetime  int    `default:"86400"`           // seconds
+		MaxIdleTime  int    `default:"3600"`            // seconds
+		MaxOpenConns int    `default:"100"`             // connections
+		MaxIdleConns int    `default:"50"`              // connections
 		TablePrefix  string `default:""`
 		AutoMigrate  bool
 		Resolver     []struct {
@@ -157,4 +175,8 @@ func (c *Config) Print() {
 
 func (c *Config) FormatTableName(name string) string {
 	return c.Storage.DB.TablePrefix + name
+}
+
+func (c *Config) EnableOSS() bool {
+	return c.OSS.Minio.Domain != "" || c.OSS.S3.Domain != ""
 }
