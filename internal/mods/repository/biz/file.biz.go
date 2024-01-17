@@ -19,6 +19,7 @@ type File struct {
 // Query repositories from the data access object based on the provided parameters and options.
 func (a *File) Query(ctx context.Context, params schema.FileQueryParam) (*schema.FileQueryResult, error) {
 	params.Pagination = true
+	params.IsAdmin = true
 
 	result, err := a.FileDAL.Query(ctx, params, schema.FileQueryOptions{
 		QueryOptions: util.QueryOptions{
@@ -27,6 +28,8 @@ func (a *File) Query(ctx context.Context, params schema.FileQueryParam) (*schema
 			},
 		},
 	})
+
+	result.Data = result.Data.ToTree()
 	if err != nil {
 		return nil, err
 	}

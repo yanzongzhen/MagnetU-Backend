@@ -27,6 +27,15 @@ func (a *File) Query(ctx context.Context, params schema.FileQueryParam, opts ...
 	}
 
 	db := GetFileDB(ctx, a.DB)
+	if params.RepositoryID != "" {
+		db = db.Where("repository_id = ?", params.RepositoryID)
+	}
+
+	if !params.IsAdmin {
+		if params.ParentFileID != "" {
+			db = db.Where("parent_id = ?", params.ParentFileID)
+		}
+	}
 
 	var list schema.Files
 	pageResult, err := util.WrapPageQuery(ctx, db, params.PaginationParam, opt.QueryOptions, &list)

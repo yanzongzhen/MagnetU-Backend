@@ -28,7 +28,7 @@ func (a *NetDisk) Query(ctx context.Context, params schema.FileQueryParam) (*sch
 		},
 	})
 
-	result.Data = result.Data.ToTree()
+	//result.Data = result.Data.ToTree()
 	if err != nil {
 		return nil, err
 	}
@@ -51,6 +51,22 @@ func (a *NetDisk) Create(ctx context.Context, formItem *schema.FileForm) (*schem
 	file := &schema.File{
 		ID:        util.NewXID(),
 		CreatedAt: time.Now(),
+	}
+	if formItem.ParentID != "" {
+		// 检查父级文件夹是否存在
+		parent, err := a.FileDAL.Get(ctx, formItem.ParentID)
+		if err != nil {
+			return nil, err
+		}
+		if parent == nil {
+			return nil, errors.NotFound("", "Parent file not found")
+		}
+		if !parent.IsFolder {
+			return nil, errors.BadRequest("", "Parent file is not a folder")
+		}
+	} else {
+		// 如果没有指定父级文件夹，则默认为当前用户的 RepositoryID
+		formItem.ParentID = formItem.RepositoryID
 	}
 
 	if err := formItem.FillTo(file); err != nil {

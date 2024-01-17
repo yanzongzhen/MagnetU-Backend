@@ -31,6 +31,9 @@ func (a *NetDisk) Query(c *gin.Context) {
 	}
 	// 设置本人的 RepositoryID
 	params.RepositoryID = util.FromUserID(ctx)
+	if params.ParentFileID == "" {
+		params.ParentFileID = params.RepositoryID
+	}
 	result, err := a.NetDiskBIZ.Query(ctx, params)
 	if err != nil {
 		util.ResError(c, err)

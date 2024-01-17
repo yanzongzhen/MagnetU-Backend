@@ -33,6 +33,7 @@ type FileQueryParam struct {
 
 	RepositoryID string `form:"repository_id"` // From Repository.ID
 	ParentFileID string `form:"parent_id"`
+	IsAdmin      bool
 }
 
 // FileQueryOptions Defining the query options for the `File` struct.
