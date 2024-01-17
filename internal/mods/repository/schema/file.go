@@ -13,7 +13,7 @@ type File struct {
 	ParentID     string    `json:"parent_id" gorm:"index;"`
 	RepositoryID string    `json:"repository_id" gorm:"index;foreignKey"`
 	FileMeta     string    `json:"file_meta" gorm:"size:1024;"`
-	FileType     string    `json:"file_type" gorm:"index;"`
+	FileExt      string    `json:"file_ext" gorm:"index;size:32;"`
 	FileSize     int64     `json:"file_size" gorm:"default:0"`
 	URL          string    `json:"url"`
 	TransURL     string    `json:"trans_url"`
@@ -92,8 +92,9 @@ func (a Files) ToTree() Files {
 // FileForm Defining the data structure for creating a `File` struct.
 type FileForm struct {
 	FileName     string `json:"file_name"  binding:"required"` // FileName
-	FileType     string `json:"file_type"`                     // FileType
 	FileSize     int64  `json:"file_size"`                     // FileSize
+	FileExt      string `json:"file_ext"`                      // FileExt
+	FileMeta     string `json:"file_meta"`                     // FileMeta
 	URL          string `json:"url"`                           // URL
 	TransURL     string `json:"trans_url"`                     // TransURL
 	IsFolder     bool   `json:"is_folder"`                     // IsFolder
@@ -109,9 +110,10 @@ func (a *FileForm) Validate() error {
 // FillTo Convert `FileForm` to `File` object.
 func (a *FileForm) FillTo(file *File) error {
 	file.FileName = a.FileName
-	file.FileType = a.FileType
+	file.FileExt = a.FileExt
 	file.FileSize = a.FileSize
 	file.URL = a.URL
+	file.FileMeta = a.FileMeta
 	file.TransURL = a.TransURL
 	file.IsFolder = a.IsFolder
 	file.ParentID = a.ParentID
