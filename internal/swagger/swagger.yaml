@@ -18,28 +18,79 @@ definitions:
     type: object
   schema.Cloud:
     properties:
+      btih:
+        description: BTIH
+        type: string
       created_at:
         description: Create time
         type: string
       id:
         description: Unique ID
         type: string
+      idx:
+        description: IDX
+        type: string
+      name:
+        description: Name
+        type: string
+      raw_id:
+        description: Raw ID
+        type: string
+      remark:
+        description: Remark
+        type: string
+      size:
+        description: Size
+        type: integer
+      source:
+        description: Source
+        type: string
       updated_at:
         description: Update time
         type: string
+      url:
+        description: URL
+        type: string
     type: object
   schema.CloudForm:
+    properties:
+      btih:
+        description: BTIH
+        type: string
+      idx:
+        description: IDX
+        type: string
+      name:
+        description: Name
+        type: string
+      raw_id:
+        description: Raw ID
+        type: string
+      remark:
+        description: Remark
+        type: string
+      size:
+        description: Size
+        type: integer
+      source:
+        description: Source
+        type: string
+      url:
+        description: URL
+        type: string
+    required:
+    - btih
+    - idx
+    - name
+    - raw_id
+    - size
     type: object
   schema.File:
     properties:
-      cloudPath:
-        type: string
-      create_at:
+      created_at:
         description: Create time
         type: string
-      fileExtension:
-        type: string
-      fileID:
+      fileMeta:
         type: string
       fileName:
         type: string
@@ -48,15 +99,14 @@ definitions:
       fileType:
         type: string
       files:
+        allOf:
+        - $ref: '#/definitions/schema.Files'
         description: 与 Folder 的关联
-        items:
-          $ref: '#/definitions/schema.File'
-        type: array
+      id:
+        type: string
       isFolder:
         type: boolean
-      parentFileID:
-        type: string
-      remark:
+      parentID:
         type: string
       repository:
         allOf:
@@ -64,24 +114,17 @@ definitions:
         description: 与 Repository 的关联
       repositoryID:
         type: string
-      storagePath:
+      transURL:
         type: string
-      update_at:
+      updated_at:
         description: Update time
+        type: string
+      url:
         type: string
     type: object
   schema.FileForm:
     properties:
-      cloud_path:
-        description: CloudPath
-        type: string
       createAt:
-        type: string
-      download_count:
-        description: DownloadCount
-        type: integer
-      file_extension:
-        description: FileExtension
         type: string
       file_name:
         description: FileName
@@ -95,21 +138,28 @@ definitions:
       is_folder:
         description: IsFolder
         type: boolean
-      remark:
-        description: Remark
+      parent_file_id:
+        description: ParentFileID
         type: string
-      storage_path:
-        description: StoragePath
+      repository_id:
+        description: RepositoryID
+        type: string
+      trans_url:
+        description: TransURL
         type: string
       updateAt:
         type: string
+      url:
+        description: URL
+        type: string
     required:
-    - file_extension
     - file_name
-    - file_size
-    - file_type
-    - storage_path
+    - is_folder
     type: object
+  schema.Files:
+    items:
+      $ref: '#/definitions/schema.File'
+    type: array
   schema.Logger:
     properties:
       created_at:
@@ -329,6 +379,10 @@ definitions:
       current_capacity:
         description: Current capacity
         type: integer
+      files:
+        items:
+          $ref: '#/definitions/schema.File'
+        type: array
       max_capacity:
         description: Max capacity
         type: integer
@@ -1358,6 +1412,176 @@ paths:
       summary: Update menu record by ID
       tags:
       - MenuAPI
+  /api/v1/netdisk:
+    get:
+      parameters:
+      - default: 1
+        description: pagination index
+        in: query
+        name: current
+        required: true
+        type: integer
+      - default: 10
+        description: pagination size
+        in: query
+        name: pageSize
+        required: true
+        type: integer
+      - description: parent_file_id
+        in: query
+        name: parent_file_id
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/util.ResponseResult'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/schema.File'
+                  type: array
+              type: object
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+      security:
+      - ApiKeyAuth: []
+      summary: Query NetDisk list
+      tags:
+      - NetDiskAPI
+    post:
+      parameters:
+      - description: Request body
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/schema.FileForm'
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/util.ResponseResult'
+            - properties:
+                data:
+                  $ref: '#/definitions/schema.File'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+      security:
+      - ApiKeyAuth: []
+      summary: Create NetDisk record
+      tags:
+      - NetDiskAPI
+  /api/v1/netdisk/{id}:
+    delete:
+      parameters:
+      - description: unique id
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+      security:
+      - ApiKeyAuth: []
+      summary: Delete NetDisk record by ID
+      tags:
+      - NetDiskAPI
+    get:
+      parameters:
+      - description: unique id
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/util.ResponseResult'
+            - properties:
+                data:
+                  $ref: '#/definitions/schema.File'
+              type: object
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+      security:
+      - ApiKeyAuth: []
+      summary: Get NetDisk record by ID
+      tags:
+      - NetDiskAPI
+    put:
+      parameters:
+      - description: unique id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Request body
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/schema.FileForm'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+      security:
+      - ApiKeyAuth: []
+      summary: Update NetDisk record by ID
+      tags:
+      - NetDiskAPI
   /api/v1/repositories:
     get:
       parameters:

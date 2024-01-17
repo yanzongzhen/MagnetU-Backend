@@ -1329,6 +1329,287 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/v1/netdisk": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "NetDiskAPI"
+                ],
+                "summary": "Query NetDisk list",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "default": 1,
+                        "description": "pagination index",
+                        "name": "current",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "default": 10,
+                        "description": "pagination size",
+                        "name": "pageSize",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "parent_file_id",
+                        "name": "parent_file_id",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/util.ResponseResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/schema.File"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "NetDiskAPI"
+                ],
+                "summary": "Create NetDisk record",
+                "parameters": [
+                    {
+                        "description": "Request body",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/schema.FileForm"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/util.ResponseResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/schema.File"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/netdisk/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "NetDiskAPI"
+                ],
+                "summary": "Get NetDisk record by ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "unique id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/util.ResponseResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/schema.File"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "NetDiskAPI"
+                ],
+                "summary": "Update NetDisk record by ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "unique id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Request body",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/schema.FileForm"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "NetDiskAPI"
+                ],
+                "summary": "Delete NetDisk record by ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "unique id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/repositories": {
             "get": {
                 "security": [
@@ -2263,6 +2544,10 @@ const docTemplate = `{
         "schema.Cloud": {
             "type": "object",
             "properties": {
+                "btih": {
+                    "description": "BTIH",
+                    "type": "string"
+                },
                 "created_at": {
                     "description": "Create time",
                     "type": "string"
@@ -2271,29 +2556,92 @@ const docTemplate = `{
                     "description": "Unique ID",
                     "type": "string"
                 },
+                "idx": {
+                    "description": "IDX",
+                    "type": "string"
+                },
+                "name": {
+                    "description": "Name",
+                    "type": "string"
+                },
+                "raw_id": {
+                    "description": "Raw ID",
+                    "type": "string"
+                },
+                "remark": {
+                    "description": "Remark",
+                    "type": "string"
+                },
+                "size": {
+                    "description": "Size",
+                    "type": "integer"
+                },
+                "source": {
+                    "description": "Source",
+                    "type": "string"
+                },
                 "updated_at": {
                     "description": "Update time",
+                    "type": "string"
+                },
+                "url": {
+                    "description": "URL",
                     "type": "string"
                 }
             }
         },
         "schema.CloudForm": {
-            "type": "object"
+            "type": "object",
+            "required": [
+                "btih",
+                "idx",
+                "name",
+                "raw_id",
+                "size"
+            ],
+            "properties": {
+                "btih": {
+                    "description": "BTIH",
+                    "type": "string"
+                },
+                "idx": {
+                    "description": "IDX",
+                    "type": "string"
+                },
+                "name": {
+                    "description": "Name",
+                    "type": "string"
+                },
+                "raw_id": {
+                    "description": "Raw ID",
+                    "type": "string"
+                },
+                "remark": {
+                    "description": "Remark",
+                    "type": "string"
+                },
+                "size": {
+                    "description": "Size",
+                    "type": "integer"
+                },
+                "source": {
+                    "description": "Source",
+                    "type": "string"
+                },
+                "url": {
+                    "description": "URL",
+                    "type": "string"
+                }
+            }
         },
         "schema.File": {
             "type": "object",
             "properties": {
-                "cloudPath": {
-                    "type": "string"
-                },
-                "create_at": {
+                "created_at": {
                     "description": "Create time",
                     "type": "string"
                 },
-                "fileExtension": {
-                    "type": "string"
-                },
-                "fileID": {
+                "fileMeta": {
                     "type": "string"
                 },
                 "fileName": {
@@ -2307,18 +2655,19 @@ const docTemplate = `{
                 },
                 "files": {
                     "description": "与 Folder 的关联",
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/schema.File"
-                    }
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/schema.Files"
+                        }
+                    ]
+                },
+                "id": {
+                    "type": "string"
                 },
                 "isFolder": {
                     "type": "boolean"
                 },
-                "parentFileID": {
-                    "type": "string"
-                },
-                "remark": {
+                "parentID": {
                     "type": "string"
                 },
                 "repository": {
@@ -2332,11 +2681,14 @@ const docTemplate = `{
                 "repositoryID": {
                     "type": "string"
                 },
-                "storagePath": {
+                "transURL": {
                     "type": "string"
                 },
-                "update_at": {
+                "updated_at": {
                     "description": "Update time",
+                    "type": "string"
+                },
+                "url": {
                     "type": "string"
                 }
             }
@@ -2344,26 +2696,11 @@ const docTemplate = `{
         "schema.FileForm": {
             "type": "object",
             "required": [
-                "file_extension",
                 "file_name",
-                "file_size",
-                "file_type",
-                "storage_path"
+                "is_folder"
             ],
             "properties": {
-                "cloud_path": {
-                    "description": "CloudPath",
-                    "type": "string"
-                },
                 "createAt": {
-                    "type": "string"
-                },
-                "download_count": {
-                    "description": "DownloadCount",
-                    "type": "integer"
-                },
-                "file_extension": {
-                    "description": "FileExtension",
                     "type": "string"
                 },
                 "file_name": {
@@ -2382,17 +2719,31 @@ const docTemplate = `{
                     "description": "IsFolder",
                     "type": "boolean"
                 },
-                "remark": {
-                    "description": "Remark",
+                "parent_file_id": {
+                    "description": "ParentFileID",
                     "type": "string"
                 },
-                "storage_path": {
-                    "description": "StoragePath",
+                "repository_id": {
+                    "description": "RepositoryID",
+                    "type": "string"
+                },
+                "trans_url": {
+                    "description": "TransURL",
                     "type": "string"
                 },
                 "updateAt": {
                     "type": "string"
+                },
+                "url": {
+                    "description": "URL",
+                    "type": "string"
                 }
+            }
+        },
+        "schema.Files": {
+            "type": "array",
+            "items": {
+                "$ref": "#/definitions/schema.File"
             }
         },
         "schema.Logger": {
@@ -2693,6 +3044,12 @@ const docTemplate = `{
                 "current_capacity": {
                     "description": "Current capacity",
                     "type": "integer"
+                },
+                "files": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/schema.File"
+                    }
                 },
                 "max_capacity": {
                     "description": "Max capacity",

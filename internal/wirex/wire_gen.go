@@ -136,15 +136,16 @@ func BuildInjector(ctx context.Context) (*Injector, func(), error) {
 	dalRepository := &dal3.Repository{
 		DB: db,
 	}
+	file := &dal3.File{
+		DB: db,
+	}
 	bizRepository := &biz3.Repository{
 		Trans:         trans,
 		RepositoryDAL: dalRepository,
+		FileDAL:       file,
 	}
 	apiRepository := &api3.Repository{
 		RepositoryBIZ: bizRepository,
-	}
-	file := &dal3.File{
-		DB: db,
 	}
 	bizFile := &biz3.File{
 		Trans:   trans,
@@ -153,10 +154,19 @@ func BuildInjector(ctx context.Context) (*Injector, func(), error) {
 	apiFile := &api3.File{
 		FileBIZ: bizFile,
 	}
+	netDisk := &biz3.NetDisk{
+		Trans:         trans,
+		FileDAL:       file,
+		RepositoryDAL: dalRepository,
+	}
+	apiNetDisk := &api3.NetDisk{
+		NetDiskBIZ: netDisk,
+	}
 	repositoryRepository := &repository.Repository{
 		DB:            db,
 		RepositoryAPI: apiRepository,
 		FileAPI:       apiFile,
+		NetDiskAPI:    apiNetDisk,
 	}
 	dalCloud := &dal4.Cloud{
 		DB: db,

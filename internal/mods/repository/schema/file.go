@@ -8,21 +8,23 @@ import (
 
 // File permissions for Repository
 type File struct {
-	FileID        string  `gorm:"primaryKey"`
-	FileName      string  `gorm:"index;"`
-	ParentFileID  *string `gorm:"index;"`
-	RepositoryID  string  `gorm:"index;foreignKey"`
-	FileExtension string
-	FileType      string
-	FileSize      int64
-	StoragePath   string
-	CloudPath     string
-	Remark        string     `gorm:"size:1023;"`
-	IsFolder      bool       `gorm:"default:false"`
-	Files         Files      `gorm:"foreignKey:ParentFileID"` // 与 Folder 的关联
-	Repository    Repository `gorm:"foreignKey:RepositoryID"` // 与 Repository 的关联
-	CreateAt      time.Time  `json:"create_at"`               // Create time
-	UpdateAt      time.Time  `json:"update_at"`               // Update time
+	ID           string    `json:"id" gorm:"primaryKey"`
+	FileName     string    `json:"file_name" gorm:"index;"`
+	ParentID     string    `json:"parent_id" gorm:"index;"`
+	RepositoryID string    `json:"repository_id" gorm:"index;foreignKey"`
+	FileMeta     string    `json:"file_meta" gorm:"size:1024;"`
+	FileType     string    `json:"file_type" gorm:"index;"`
+	FileSize     int64     `json:"file_size" gorm:"default:0"`
+	URL          string    `json:"url"`
+	TransURL     string    `json:"trans_url"`
+	IsFolder     bool      `json:"is_folder" gorm:"default:false"`
+	Files        Files     `json:"files" gorm:"foreignKey:ParentID"` // 与 Folder 的关联
+	CreatedAt    time.Time `json:"created_at"`                       // Create time
+	UpdatedAt    time.Time `json:"updated_at"`                       // Update time
+}
+
+func (f *File) TableName() string {
+	return "file"
 }
 
 // FileQueryParam Defining the query parameters for the `File` struct.
@@ -47,21 +49,56 @@ type FileQueryResult struct {
 // Files Defining the slice of `File` struct.
 type Files []*File
 
+func (a Files) Len() int {
+	return len(a)
+}
+
+func (a Files) Less(i, j int) bool {
+	return a[i].CreatedAt.Unix() > a[j].CreatedAt.Unix()
+}
+
+func (a Files) Swap(i, j int) {
+	a[i], a[j] = a[j], a[i]
+}
+
+func (a Files) ToMap() map[string]*File {
+	m := make(map[string]*File)
+	for _, item := range a {
+		m[item.ID] = item
+	}
+	return m
+}
+
+func (a Files) ToTree() Files {
+	var list Files
+	m := a.ToMap()
+	for _, item := range a {
+		if item.ParentID == "" {
+			list = append(list, item)
+			continue
+		}
+		if parent, ok := m[item.ParentID]; ok {
+			if parent.Files == nil {
+				children := Files{item}
+				parent.Files = children
+				continue
+			}
+			parent.Files = append(parent.Files, item)
+		}
+	}
+	return list
+}
+
 // FileForm Defining the data structure for creating a `File` struct.
 type FileForm struct {
-	FileName      string `form:"file_name" binding:"required"`      // FileName
-	FileExtension string `form:"file_extension" binding:"required"` // FileExtension
-	FileType      string `form:"file_type" binding:"required"`      // FileType
-	FileSize      int64  `form:"file_size" binding:"required"`      // FileSize
-	DownloadCount int    `form:"download_count"`                    // DownloadCount
-	StoragePath   string `form:"storage_path" binding:"required"`   // StoragePath
-	CloudPath     string `form:"cloud_path"`                        // CloudPath
-	Remark        string `form:"remark"`                            // Remark
-	IsFolder      bool   `form:"is_folder"`                         // IsFolder
-	ParentFileID  string `form:"parent_file_id"`                    // ParentFileID
-	RepositoryID  string `form:"repository_id" binding:"required"`  // RepositoryID
-	CreateAt      time.Time
-	UpdateAt      time.Time
+	FileName     string `json:"file_name"  binding:"required"` // FileName
+	FileType     string `json:"file_type"`                     // FileType
+	FileSize     int64  `json:"file_size"`                     // FileSize
+	URL          string `json:"url"`                           // URL
+	TransURL     string `json:"trans_url"`                     // TransURL
+	IsFolder     bool   `json:"is_folder"`                     // IsFolder
+	ParentID     string `json:"parent_id"`                     // ParentFileID
+	RepositoryID string `json:"repository_id"`                 // RepositoryID
 }
 
 // Validate A validation function for the `FileForm` struct.
@@ -72,16 +109,12 @@ func (a *FileForm) Validate() error {
 // FillTo Convert `FileForm` to `File` object.
 func (a *FileForm) FillTo(file *File) error {
 	file.FileName = a.FileName
-	file.FileExtension = a.FileExtension
 	file.FileType = a.FileType
 	file.FileSize = a.FileSize
-	file.StoragePath = a.StoragePath
-	file.CloudPath = a.CloudPath
-	file.CreateAt = a.CreateAt
-	file.UpdateAt = a.UpdateAt
-	file.Remark = a.Remark
+	file.URL = a.URL
+	file.TransURL = a.TransURL
 	file.IsFolder = a.IsFolder
-	file.ParentFileID = &a.ParentFileID
+	file.ParentID = a.ParentID
 	file.RepositoryID = a.RepositoryID
 	return nil
 }

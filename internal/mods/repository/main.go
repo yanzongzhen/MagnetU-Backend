@@ -13,6 +13,7 @@ type Repository struct {
 	DB            *gorm.DB
 	RepositoryAPI *api.Repository
 	FileAPI       *api.File
+	NetDiskAPI    *api.NetDisk
 }
 
 func (a *Repository) AutoMigrate(ctx context.Context) error {
@@ -42,6 +43,14 @@ func (a *Repository) RegisterV1Routers(ctx context.Context, v1 *gin.RouterGroup)
 		file.POST("", a.FileAPI.Create)
 		file.PUT(":id", a.FileAPI.Update)
 		file.DELETE(":id", a.FileAPI.Delete)
+	}
+	netdisk := v1.Group("netdisk")
+	{
+		netdisk.GET("", a.NetDiskAPI.Query)
+		netdisk.GET(":id", a.NetDiskAPI.Get)
+		netdisk.POST("", a.NetDiskAPI.Create)
+		netdisk.PUT(":id", a.NetDiskAPI.Update)
+		netdisk.DELETE(":id", a.NetDiskAPI.Delete)
 	}
 	return nil
 }

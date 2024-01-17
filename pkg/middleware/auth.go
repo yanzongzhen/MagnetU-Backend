@@ -1,9 +1,9 @@
 package middleware
 
 import (
+	"github.com/gin-gonic/gin"
 	"github.com/yanzongzhen/magnetu/pkg/logging"
 	"github.com/yanzongzhen/magnetu/pkg/util"
-	"github.com/gin-gonic/gin"
 )
 
 type AuthConfig struct {

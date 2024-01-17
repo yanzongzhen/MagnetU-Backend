@@ -15,4 +15,6 @@ var Set = wire.NewSet(
 	wire.Struct(new(dal.File), "*"),
 	wire.Struct(new(biz.File), "*"),
 	wire.Struct(new(api.File), "*"),
+	wire.Struct(new(biz.NetDisk), "*"),
+	wire.Struct(new(api.NetDisk), "*"),
 )
